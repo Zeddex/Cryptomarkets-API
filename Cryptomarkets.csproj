@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6572ECAD-AC3A-4315-90CE-97DFA4F1E347}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Cryptomarkets</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>Cryptomarkets.Apis</RootNamespace>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\cryptomarkets api\gate.io\VS\gate.io-dll\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Binance\BinanceFuturesApi.cs" />
+    <Compile Include="Binance\BinanceMarginTradeApi.cs" />
+    <Compile Include="Binance\BinanceSpotTradeApi.cs" />
+    <Compile Include="Binance\BinanceWalletApi.cs" />
+    <Compile Include="Bitbns\BitbnsApi.cs" />
+    <Compile Include="Bitbns\Endpoints.cs" />
+    <Compile Include="Bitbns\MarginApi.cs" />
+    <Compile Include="Bitbns\PublicApi.cs" />
+    <Compile Include="Bitbns\SpotApi.cs" />
+    <Compile Include="Bitbns\WalletApi.cs" />
+    <Compile Include="Bitbns\WithdrawalApi.cs" />
+    <Compile Include="DebugMode.cs" />
+    <Compile Include="Binance\BinanceApi.cs" />
+    <Compile Include="Binance\BinancePrivateApi.cs" />
+    <Compile Include="Binance\BinancePublicApi.cs" />
+    <Compile Include="Binance\BinanceWithdrawalApi.cs" />
+    <Compile Include="Binance\Endpoints.cs" />
+    <Compile Include="Binance\EndpointSecurityType.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="GateIO\Endpoints.cs" />
+    <Compile Include="GateIO\GateIOApi.cs" />
+    <Compile Include="GateIO\GateIOMarginApi.cs" />
+    <Compile Include="GateIO\GateIOPublicApi.cs" />
+    <Compile Include="GateIO\GateIOSpotApi.cs" />
+    <Compile Include="GateIO\GateIOWalletApi.cs" />
+    <Compile Include="GateIO\GateIOWithdrawalApi.cs" />
+    <Compile Include="Latoken\LatokenApi.cs" />
+    <Compile Include="Latoken\Endpoints.cs" />
+    <Compile Include="Latoken\PublicApi.cs" />
+    <Compile Include="Latoken\OrderApi.cs" />
+    <Compile Include="Latoken\AccountApi.cs" />
+    <Compile Include="Latoken\TransactionApi.cs" />
+    <Compile Include="Lbank\LbankApi.cs" />
+    <Compile Include="Lbank\Endpoints.cs" />
+    <Compile Include="Lbank\MarginApi.cs" />
+    <Compile Include="Lbank\PublicApi.cs" />
+    <Compile Include="Lbank\SpotApi.cs" />
+    <Compile Include="Lbank\WalletApi.cs" />
+    <Compile Include="Lbank\WithdrawalApi.cs" />
+    <Compile Include="Poloniex\AccountApi.cs" />
+    <Compile Include="Poloniex\PoloniexApi.cs" />
+    <Compile Include="Poloniex\Endpoints.cs" />
+    <Compile Include="Poloniex\TradeApi.cs" />
+    <Compile Include="Poloniex\PublicApi.cs" />
+    <Compile Include="Poloniex\OrderApi.cs" />
+    <Compile Include="Poloniex\WalletApi.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
