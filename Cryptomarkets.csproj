@@ -73,6 +73,7 @@
     <Compile Include="Latoken\PublicApi.cs" />
     <Compile Include="Latoken\OrderApi.cs" />
     <Compile Include="Latoken\AccountApi.cs" />
+    <Compile Include="Latoken\TradeApi.cs" />
     <Compile Include="Latoken\TransactionApi.cs" />
     <Compile Include="Lbank\LbankApi.cs" />
     <Compile Include="Lbank\Endpoints.cs" />

@@ -22,10 +22,10 @@ namespace Cryptomarkets
     {
         #region Encoding
 
-        public static string GenerateSignature(string apiSecret, string message)
+        public static string GenerateSignatureHMACSHA256(string apiSecret, string message)
         {
             using (var hmacSHA256 = new HMACSHA256(Encoding.UTF8.GetBytes(apiSecret)))
-                return BitConverter.ToString(hmacSHA256.ComputeHash(Encoding.UTF8.GetBytes(message))).Replace("-", "");
+                return BitConverter.ToString(hmacSHA256.ComputeHash(Encoding.UTF8.GetBytes(message))).Replace("-", "").ToLower();
         }
 
         public static string GenerateSignaturePoloniex(string apiSecret, string message)
@@ -139,7 +139,7 @@ namespace Cryptomarkets
 
         #region Data
 
-        public static string GenerateOrderedPayload(string method, string path, string timestamp, Dictionary<string, string> parameters)
+        public static string GenerateOrderedPayloadPoloniex(string method, string path, string timestamp, Dictionary<string, string> parameters)
         {
             var sortParams = new SortedDictionary<string, string>(parameters);
             sortParams.Add("signTimestamp", timestamp);
@@ -157,7 +157,7 @@ namespace Cryptomarkets
             return payload;
         }
 
-        public static string GeneratePostPayload(string method, string path, string timestamp, Dictionary<string, string> parameters)
+        public static string GeneratePostPayloadPoloniex(string method, string path, string timestamp, Dictionary<string, string> parameters)
         {
             string jsonStr = string.Empty;
 
@@ -173,7 +173,7 @@ namespace Cryptomarkets
             return payloadBuffer.ToString();
         }
 
-        public static string GenerateEmptyPayload(string method, string path, string timestamp)
+        public static string GenerateEmptyPayloadPoloniex(string method, string path, string timestamp)
         {
             string payload = method + "\n" + path + "\n" + $"signTimestamp={timestamp}";
 

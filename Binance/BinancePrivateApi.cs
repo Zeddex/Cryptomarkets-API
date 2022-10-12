@@ -43,7 +43,7 @@ namespace Cryptomarkets.Apis.Binance
             if (isSigned)
             {
                 parameters = parameters + (!string.IsNullOrWhiteSpace(parameters) ? "&timestamp=" : "timestamp=") + Extensions.GenerateTimeStamp();
-                string signature = Extensions.GenerateSignature(_secret, parameters);
+                string signature = Extensions.GenerateSignatureHMACSHA256(_secret, parameters);
                 requestUri = string.Format("{0}?{1}&signature={2}", endpoint, parameters, signature);
             }
             return _httpClient.SendAsync(new HttpRequestMessage(method, requestUri)).Result.Content.ReadAsStringAsync().Result;

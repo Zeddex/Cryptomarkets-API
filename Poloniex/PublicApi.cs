@@ -18,9 +18,6 @@ namespace Cryptomarkets.Apis.Poloniex
         {
             HttpClientHandler handler = new HttpClientHandler();
 
-            if (DebugMode.On)
-                handler.Proxy = new WebProxy(new Uri(DebugMode.Proxy));
-
             handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             return new HttpClient(handler)

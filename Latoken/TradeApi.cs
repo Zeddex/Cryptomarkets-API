@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
+using System.Linq;
 using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Cryptomarkets.Apis.Latoken
 {
-    public class AccountApi
+    public class TradeApi
     {
         private readonly string _key;
         private readonly string _secret;
         private const string ApiUrl = "https://api.latoken.com";
         private readonly HttpClient _httpClient;
 
-        public AccountApi(string apiKey, string apiSecret)
+        public TradeApi(string apiKey, string apiSecret)
         {
             _key = apiKey;
             _secret = apiSecret;
@@ -36,9 +38,9 @@ namespace Cryptomarkets.Apis.Latoken
             return configureHttpClient;
         }
 
-        private string Call(HttpMethod method, string endpoint, string param = "")
+        private string Call(HttpMethod method, string endpoint, string queryParam = "")
         {
-            string path = endpoint + param;
+            string path = endpoint + queryParam;
             string toSign = method.Method + path;
             string signature = Extensions.GenerateSignatureHMACSHA256(_secret, toSign);
             string requestUri = path;
@@ -72,27 +74,50 @@ namespace Cryptomarkets.Apis.Latoken
 
         #region Queries
 
-        public string GetBalances(string zeros = "false")
+        public string GetTrades(string from = "", string limit = "")
         {
-            var parameters = new Dictionary<string, string>
-            {
-                { "zeros", zeros }
-            };
+            var parameters = new Dictionary<string, string>();
 
-            return Call(HttpMethod.Get, Endpoints.Account.Balances, parameters);
+            if (!string.IsNullOrEmpty(from))
+                parameters.Add("from", from);
+            if (!string.IsNullOrEmpty(limit))
+                parameters.Add("limit", limit);
+
+            return Call(HttpMethod.Get, Endpoints.Trade.GetTrades, parameters);
         }
 
-        public string GetBalancesByCurrency(string currency, string type)
+        public string FeeForPair(string currency, string quote)
         {
             if (string.IsNullOrWhiteSpace(currency))
                 throw new ArgumentException("currency cannot be empty. ", nameof(currency));
 
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentException("type cannot be empty. ", nameof(type));
+            if (string.IsNullOrWhiteSpace(quote))
+                throw new ArgumentException("quote cannot be empty. ", nameof(quote));
 
-            string param = $"{currency}/{type}";
+            var parameters = new Dictionary<string, string>
+            {
+                { "currency", currency },
+                { "quote", quote }
+            };
 
-            return Call(HttpMethod.Get, Endpoints.Account.BalancesByCurrency, param);
+            return Call(HttpMethod.Get, Endpoints.Trade.FeeForPair, parameters);
+        }
+
+        public string TradesByPair(string currency, string quote)
+        {
+            if (string.IsNullOrWhiteSpace(currency))
+                throw new ArgumentException("currency cannot be empty. ", nameof(currency));
+
+            if (string.IsNullOrWhiteSpace(quote))
+                throw new ArgumentException("quote cannot be empty. ", nameof(quote));
+
+            var parameters = new Dictionary<string, string>
+            {
+                { "currency", currency },
+                { "quote", quote }
+            };
+
+            return Call(HttpMethod.Get, Endpoints.Trade.TradesByPair, parameters);
         }
 
         #endregion

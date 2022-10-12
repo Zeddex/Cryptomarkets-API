@@ -11,13 +11,7 @@ namespace Cryptomarkets.Apis.GateIO
         private static GateIOMarginApi _margin;
         private static bool _isInit;
 
-        public static GateIOPublicApi Public
-        {
-            get
-            {
-                return _public;
-            }
-        }
+        public static GateIOPublicApi Public => _public;
 
         public static GateIOWalletApi Wallet
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,9 +17,6 @@ namespace Cryptomarkets.Apis.Lbank
         private static HttpClient CreateAndConfigureHttpClient()
         {
             HttpClientHandler handler = new HttpClientHandler();
-
-            if (DebugMode.On)
-                handler.Proxy = new WebProxy(new Uri(DebugMode.Proxy));
 
             handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
@@ -38,6 +36,13 @@ namespace Cryptomarkets.Apis.Lbank
         private string Call(HttpMethod method, string endpoint, string param = null)
         {
             string requestUri = endpoint + param;
+
+            return _httpClient.SendAsync(new HttpRequestMessage(method, requestUri)).Result.Content.ReadAsStringAsync().Result;
+        }
+
+        private string Call(HttpMethod method, string endpoint, Dictionary<string, string> parameters)
+        {
+            string requestUri = Extensions.GenerateParamsString(endpoint, parameters);
 
             return _httpClient.SendAsync(new HttpRequestMessage(method, requestUri)).Result.Content.ReadAsStringAsync().Result;
         }

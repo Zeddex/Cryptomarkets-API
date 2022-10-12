@@ -25,9 +25,6 @@ namespace Cryptomarkets.Apis.Poloniex
         {
             var handler = new HttpClientHandler();
 
-            if (DebugMode.On)
-                handler.Proxy = new WebProxy(new Uri(DebugMode.Proxy));
-
             handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             var configureHttpClient = new HttpClient(handler);
@@ -45,7 +42,7 @@ namespace Cryptomarkets.Apis.Poloniex
         {
             string timestamp = Extensions.GetPoloniexServerTime();
             string extEndpoint = endpoint + paramsPath;
-            string payload = Extensions.GenerateEmptyPayload(method.ToString(), extEndpoint, timestamp);
+            string payload = Extensions.GenerateEmptyPayloadPoloniex(method.ToString(), extEndpoint, timestamp);
             string signature = Extensions.GenerateSignaturePoloniex(_secret, payload);
             string requestUri = extEndpoint;
 
@@ -63,7 +60,7 @@ namespace Cryptomarkets.Apis.Poloniex
             if (isBodyParams)
             {
                 string queryStr = Extensions.ConvertDictionaryToQueryString(parameters);
-                payload = Extensions.GeneratePostPayload(method.ToString(), endpoint, timestamp, parameters);
+                payload = Extensions.GeneratePostPayloadPoloniex(method.ToString(), endpoint, timestamp, parameters);
                 signature = Extensions.GenerateSignaturePoloniex(_secret, payload);
                 requestUri = endpoint;
 
@@ -75,7 +72,7 @@ namespace Cryptomarkets.Apis.Poloniex
 
             else
             {
-                payload = Extensions.GenerateOrderedPayload(method.ToString(), endpoint, timestamp, parameters);
+                payload = Extensions.GenerateOrderedPayloadPoloniex(method.ToString(), endpoint, timestamp, parameters);
                 signature = Extensions.GenerateSignaturePoloniex(_secret, payload);
                 requestUri = Extensions.GenerateParamsString(endpoint, parameters);
             }
