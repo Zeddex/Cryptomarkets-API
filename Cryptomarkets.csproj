@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\cryptomarkets api\gate.io\VS\gate.io-dll\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -52,6 +55,7 @@
     <Compile Include="Bitbns\SpotApi.cs" />
     <Compile Include="Bitbns\WalletApi.cs" />
     <Compile Include="Bitbns\WithdrawalApi.cs" />
+    <Compile Include="CryptoUtility.cs" />
     <Compile Include="DebugMode.cs" />
     <Compile Include="Binance\BinanceApi.cs" />
     <Compile Include="Binance\BinancePrivateApi.cs" />
@@ -77,11 +81,8 @@
     <Compile Include="Latoken\TransactionApi.cs" />
     <Compile Include="Lbank\LbankApi.cs" />
     <Compile Include="Lbank\Endpoints.cs" />
-    <Compile Include="Lbank\MarginApi.cs" />
+    <Compile Include="Lbank\PrivateApi.cs" />
     <Compile Include="Lbank\PublicApi.cs" />
-    <Compile Include="Lbank\SpotApi.cs" />
-    <Compile Include="Lbank\WalletApi.cs" />
-    <Compile Include="Lbank\WithdrawalApi.cs" />
     <Compile Include="Poloniex\AccountApi.cs" />
     <Compile Include="Poloniex\PoloniexApi.cs" />
     <Compile Include="Poloniex\Endpoints.cs" />

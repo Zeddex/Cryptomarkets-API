@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,6 +14,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Security.Policy;
+using System.Security;
+using System.Collections;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Encodings;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 
 namespace Cryptomarkets
 {
@@ -38,10 +45,132 @@ namespace Cryptomarkets
             return Convert.ToBase64String(sha256Bytes);
         }
 
+        public static string RsaEncryptWithPrivate(string privateKey, string clearText) // TODO
+        {
+            string privKey = "-----BEGIN PRIVATE KEY-----\n" + privateKey + "\n-----END PRIVATE KEY-----";
+            var privateByte = Encoding.UTF8.GetBytes(privateKey);
+            var bytesToEncrypt = Encoding.UTF8.GetBytes(clearText);
+
+            
+
+
+            //------------------------
+
+
+            using (var txtreader = new StringReader(privKey))
+            {
+                //var keyPair = (AsymmetricCipherKeyPair)new PemReader(txtreader).ReadObject();
+                //encryptEngine.Init(true, keyPair.Private);
+
+                var pemObject = new PemReader(txtreader).ReadObject();
+                var rsaPrivateCrtKeyParameters = (RsaPrivateCrtKeyParameters)pemObject;
+                var rsaKeyParameters = new RsaKeyParameters(false, rsaPrivateCrtKeyParameters.Modulus, rsaPrivateCrtKeyParameters.PublicExponent);
+
+            }
+
+
+            //-------------------------
+
+            //var keyParam = PrivateKeyFactory.CreateKey(privateByte);
+            var keyParam = PrivateKeyFactory.CreateKey(privateByte);
+            var key = (ECPrivateKeyParameters)keyParam;
+
+            var encryptEngine = new Pkcs1Encoding(new RsaEngine());
+
+            encryptEngine.Init(true, key);
+
+            var encrypted = Convert.ToBase64String(encryptEngine.ProcessBlock(bytesToEncrypt, 0, bytesToEncrypt.Length));
+
+
+            return encrypted;
+        }
+
+        public static string GenerateSignatureLbank(string apiSecret, string message)
+        {
+            var messageByte = Encoding.UTF8.GetBytes(message);
+            var secretByte = Encoding.UTF8.GetBytes(apiSecret);
+
+            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+
+            RSAParameters RSAKeyInfo = RSA.ExportParameters(false);
+            RSAKeyInfo.Modulus = Encoding.UTF8.GetBytes(apiSecret);
+            RSA.ImportParameters(RSAKeyInfo);
+
+            using (var rsa = new RSACryptoServiceProvider())
+            {
+                rsa.ImportParameters(RSAKeyInfo);
+
+                var signedBytes = rsa.SignData(messageByte, HashAlgorithmName.SHA256);
+
+                return Convert.ToBase64String(signedBytes);
+            }
+
+
+
+            //---------------------------------
+
+            //string xmlKey = "<RSAKeyValue><Modulus>MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIsbZVM5JFd2pY61icPnieIjXyCR4tya+0hmZ35QmzCrXrhc1UcAjqZTLBLbzqB3ejdOSFDA7V9XjFznRw16QlRO+U2u1G1HMsnOetDnr66DUCmbpAwLg0rxKbChyvKVStYPIscoVjD/Hb1nX96EDrhwK9YpJb89O0USqhkH6H4pAgMBAAECgYBYw4t9dnn9IaV1Edwt2OJAHagG5XBoqrBru4SQsqjEfqW7aOljHDTqZyo5gm8wL+0Zu2cjuGf/raLQaXgKXphRrjpUUW4ro5yJe82Ma5z2gxUON4ISv/jvz/pssHjVeS0USLbUnzImtB7ic4TOUU27IgrJknunpvUOiuNAka2Q3QJBAP6RbWtqqWHwVRU+bKYz1+I/TDPOipTIgf1aDJNIO2O8t+cYe5qPs8CJVycOMpCdI85VF68SUfql2zsIsHBEjh8CQQCL47T5A50DKaHYDUvwkmuXpbjyqhiCItkCicuShrgvalJmSk6NoTvSL8sQ03BTYaMhK0SCEC53hnL7cwjVEFq3AkBNucV46KYy+xhfViICVQ3zTHRN1SBG8TmPS3FPftxzRWm5K6aBuKKfhM+RYypZMUF/fEew8p0JNJ7NVYfZn3TtAkBXthrO19knFn+H/C5VVTlpCFwCq2xajIcM9GFUKmxqLnwj7wt5+lKL47OrhSe04E9siLiX5JV+FCscRnCPR4XZAkBUh6kdJ3uIkSrcqhnYFQHaYnMEuCk/0XeRue4rHEfw8zjhjdx6iPTCuUXJzYPyWbgsQ7hJxpc5fWzyi1+JjpBR</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>\";";
+
+            //RSACryptoServiceProvider key = new RSACryptoServiceProvider();
+            //key.FromXmlString(xmlKey);
+
+            //var hashData = SHA256.Create().ComputeHash(secretByte);
+
+            //var sig = key.SignData(messageByte, CryptoConfig.MapNameToOID("SHA256"));
+            //string base64Encrypted = Convert.ToBase64String(sig);
+
+            //-----------------------------------------
+
+            //using (RSA rsa = RSA.Create(1024))
+            //{
+            //    var rsaParameters = rsa.ExportParameters(true);
+
+
+            //    byte[] signature = rsa.SignData(messageByte, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            //}
+            //---------------------------------------
+
+
+            //RSACryptoServiceProvider rsaCSP = new RSACryptoServiceProvider();
+            //var res = rsaCSP.Encrypt(Encoding.UTF8.GetBytes(message), RSAEncryptionPadding.OaepSHA256);
+
+            //--------------------------------------
+
+
+            //--------------------------------------
+            //RSA rsa = RSA.Create(1024);
+
+            //RSAParameters rsap = new RSAParameters();
+            //rsap.Modulus = Encoding.ASCII.GetBytes(apiSecret);
+
+            //rsa.ImportParameters(rsap);
+            //byte[] encryptedData = rsa.Encrypt(Encoding.UTF8.GetBytes(message), RSAEncryptionPadding.OaepSHA256);
+            //string base64Encrypted = Convert.ToBase64String(encryptedData);
+
+
+            return "";
+        }
+
         public static string GenerateSignatureHMACSHA512(string apiSecret, string message)
         {
             using (var hmacSHA512 = new HMACSHA512(Encoding.UTF8.GetBytes(apiSecret)))
                 return BitConverter.ToString(hmacSHA512.ComputeHash(Encoding.UTF8.GetBytes(message))).Replace("-", "").ToLower();
+        }
+
+        public static string MD5Sign(string apiSecret, string message)
+        {
+            using (var hmac = new HMACMD5(Encoding.UTF8.GetBytes(apiSecret)))
+                return BitConverter.ToString(hmac.ComputeHash(Encoding.UTF8.GetBytes(message))).Replace("-", "");
+        }
+
+        public static string MD5Sign(string message)
+        {
+            var md5 = new MD5CryptoServiceProvider();
+
+            var messageByte = Encoding.UTF8.GetBytes(message);
+            var hashmessage = md5.ComputeHash(messageByte);
+
+            return BitConverter.ToString(hashmessage).Replace("-", "");
         }
 
         public static string EncodeSHA512(string data)
@@ -60,6 +189,17 @@ namespace Cryptomarkets
         {
             var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
             return Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        public static byte[] GenerateSalt(int length)
+        {
+            byte[] salt = new byte[length];
+
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
         }
 
         #endregion
