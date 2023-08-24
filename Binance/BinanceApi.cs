@@ -4,20 +4,20 @@ namespace Cryptomarkets.Apis.Binance
 {
     public class BinanceApi
     {
-        private static BinancePublicApi _public;
-        private static BinanceSpotTradeApi _spotTrade;
-        private static BinanceMarginTradeApi _marginTrade;
-        private static BinanceWalletApi _wallet;
-        private static BinanceFuturesApi _futures;
-        private static BinancePrivateApi _private;
-        private static BinanceWithdrawalApi _withdrawal;
-        private static BinanceP2P _p2p;
+        private static PublicApi _public;
+        private static SpotTradeApi _spotTrade;
+        private static MarginTradeApi _marginTrade;
+        private static WalletApi _wallet;
+        private static FuturesApi _futures;
+        private static PrivateApi _private;
+        private static WithdrawalApi _withdrawal;
+        private static P2pApi _p2p;
         private static bool _isInit;
 
         /// <summary>
         /// Публичный Api
         /// </summary>
-        public static BinancePublicApi Public
+        public static PublicApi Public
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// Приватный Api (заменён на Trade)
         /// </summary>
-        public static BinancePrivateApi Private
+        public static PrivateApi Private
         {
             get
             {
@@ -40,7 +40,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// Api для снятия (заменён на Wallet)
         /// </summary>
-        public static BinanceWithdrawalApi Withdrawal
+        public static WithdrawalApi Withdrawal
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// Spot Trade API
         /// </summary>
-        public static BinanceSpotTradeApi SpotTrade
+        public static SpotTradeApi SpotTrade
         {
             get
             {
@@ -64,7 +64,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// Margin Trade API
         /// </summary>
-        public static BinanceMarginTradeApi MarginTrade
+        public static MarginTradeApi MarginTrade
         {
             get
             {
@@ -77,7 +77,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// Wallet API
         /// </summary>
-        public static BinanceWalletApi Wallet
+        public static WalletApi Wallet
         {
             get
             {
@@ -89,7 +89,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// Futures API
         /// </summary>
-        public static BinanceFuturesApi Futures
+        public static FuturesApi Futures
         {
             get
             {
@@ -101,7 +101,7 @@ namespace Cryptomarkets.Apis.Binance
         /// <summary>
         /// P2P
         /// </summary>
-        public static BinanceP2P P2P
+        public static P2pApi P2P
         {
             get
             {
@@ -118,14 +118,14 @@ namespace Cryptomarkets.Apis.Binance
             if (string.IsNullOrWhiteSpace(apiSecret))
                 throw new ArgumentNullException("ApiSecret не может быть пустым");
 
-            _public = new BinancePublicApi();
-            _spotTrade = new BinanceSpotTradeApi(apiKey, apiSecret);
-            _marginTrade = new BinanceMarginTradeApi(apiKey, apiSecret);
-            _wallet = new BinanceWalletApi(apiKey, apiSecret);
-            _futures = new BinanceFuturesApi(apiKey, apiSecret);
-            _private = new BinancePrivateApi(apiKey, apiSecret);
-            _withdrawal = new BinanceWithdrawalApi(apiKey, apiSecret);
-            _p2p = new BinanceP2P(apiKey, apiSecret);
+            _public = new PublicApi();
+            _spotTrade = new SpotTradeApi(apiKey, apiSecret);
+            _marginTrade = new MarginTradeApi(apiKey, apiSecret);
+            _wallet = new WalletApi(apiKey, apiSecret);
+            _futures = new FuturesApi(apiKey, apiSecret);
+            _private = new PrivateApi(apiKey, apiSecret);
+            _withdrawal = new WithdrawalApi(apiKey, apiSecret);
+            _p2p = new P2pApi(apiKey, apiSecret);
             _isInit = true;
         }
 

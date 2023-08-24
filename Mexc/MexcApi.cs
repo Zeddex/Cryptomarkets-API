@@ -6,7 +6,6 @@ namespace Cryptomarkets.Apis.Mexc
     {
         private static PublicApi _public;
         private static WalletApi _wallet;
-        private static WithdrawalApi _withdrawal;
         private static SpotApi _spot;
         private static bool _isInit;
 
@@ -18,15 +17,6 @@ namespace Cryptomarkets.Apis.Mexc
             {
                 CheckIsInit();
                 return _wallet;
-            }
-        }
-
-        public static WithdrawalApi Withdrawal
-        {
-            get
-            {
-                CheckIsInit();
-                return _withdrawal;
             }
         }
 
@@ -49,7 +39,6 @@ namespace Cryptomarkets.Apis.Mexc
 
             _public = new PublicApi();
             _wallet = new WalletApi(apiKey, apiSecret);
-            _withdrawal = new WithdrawalApi(apiKey, apiSecret);
             _spot = new SpotApi(apiKey, apiSecret);
             _isInit = true;
         }

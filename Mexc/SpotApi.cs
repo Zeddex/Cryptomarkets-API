@@ -10,8 +10,8 @@ namespace Cryptomarkets.Apis.Mexc
     public class SpotApi
     {
         private readonly string _secret;
-        private const string ApiUrl = "https://api.gateio.ws";
         private readonly HttpClient _httpClient;
+        private const string ApiUrl = "https://api.mexc.com";
 
         public SpotApi(string apiKey, string apiSecret)
         {
@@ -28,87 +28,114 @@ namespace Cryptomarkets.Apis.Mexc
             HttpClient configureHttpClient = new HttpClient(handler);
 
             configureHttpClient.BaseAddress = new Uri(ApiUrl);
-            configureHttpClient.DefaultRequestHeaders.Add("KEY", apiKey);
+            configureHttpClient.DefaultRequestHeaders.Add("X-MEXC-APIKEY", apiKey);
             configureHttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             return configureHttpClient;
         }
 
-        private string Call(HttpMethod method, string endpoint, string pathParam = null, string parameters = null, bool isSigned = false)
+        /// <summary>
+        /// Empty or 1 query string parameter call
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="endpoint"></param>
+        /// <param name="queryStringParam"></param>
+        /// <returns></returns>
+        private string Call(HttpMethod method, string endpoint, string queryStringParam = "")
         {
-            string data = null;
-            string requestUri = endpoint + pathParam + (string.IsNullOrWhiteSpace(parameters) ? "" : string.Format("?{0}", parameters));
-
-            if (isSigned)
-            {
-                string payloadEncoded;
-
-                if (method.Method == "POST")
-                {
-                    requestUri = endpoint;
-                    data = Extensions.QueryStringToJson(parameters);
-                    parameters = "";
-                    payloadEncoded = Extensions.EncodeSHA512(data);
-                }
-                else
-                {
-                    payloadEncoded = Extensions.EncodeSHA512("");
-                }
-
-                string url = endpoint + pathParam;
-                string timestamp = Extensions.GetGateIOServerTime();
-                string stringToSign = method + "\n" + url + "\n" + parameters + "\n" + payloadEncoded + "\n" + timestamp;
-                string signature = Extensions.GenerateSignatureHMACSHA512(_secret, stringToSign);
-
-                _httpClient.DefaultRequestHeaders.Add("Timestamp", timestamp);
-                _httpClient.DefaultRequestHeaders.Add("SIGN", signature);
-            }
-
-            if (method.Method == "POST")
-            {
-                var content = new StringContent(data, Encoding.UTF8, "application/json");
-                return _httpClient.PostAsync(requestUri, content).Result.Content.ReadAsStringAsync().Result;
-            }
+            string timestamp = Extensions.GetMexcServerTime();
+            queryStringParam = queryStringParam + (!string.IsNullOrWhiteSpace(queryStringParam) ? "&timestamp=" : "timestamp=") + timestamp;
+            string signature = Extensions.GenerateSignatureHMACSHA256(_secret, queryStringParam);
+            string requestUri = $"{endpoint}?{queryStringParam}&signature={signature}";
 
             return _httpClient.SendAsync(new HttpRequestMessage(method, requestUri)).Result.Content.ReadAsStringAsync().Result;
         }
 
-        #region Queries
-
-        public string Buy(string currencyPair, string interval = "", string limit = "", string withId = "false")
+        /// <summary>
+        /// Request with multi parameters
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="endpoint"></param>
+        /// <param name="requestParams"></param>
+        /// <param name="isBodyParams">as request body</param>
+        /// <returns></returns>
+        private string Call(HttpMethod method, string endpoint, Dictionary<string, string> requestParams)
         {
-            if (string.IsNullOrWhiteSpace(currencyPair))
-                throw new ArgumentException("currencyPair cannot be empty. ", nameof(currencyPair));
+            string requestUri;
+            string timestamp = Extensions.GetMexcServerTime();
+            requestParams.Add("timestamp", timestamp);
+            string queryParams = Extensions.GenerateParamsString(requestParams);
+            string signature = Extensions.GenerateSignatureHMACSHA256(_secret, queryParams);
+            requestParams.Add("signature", signature);
+            queryParams = Extensions.GenerateParamsString(requestParams);
 
-            string parameters = string.Format("currency_pair={0}", currencyPair) +
-                (!string.IsNullOrWhiteSpace(interval) ? string.Format("&interval={0}", interval) : "") +
-                (!string.IsNullOrWhiteSpace(limit) ? string.Format("&limit={0}", limit) : "") +
-                (!string.IsNullOrWhiteSpace(withId) ? string.Format("&withId={0}", withId) : "");
+            if (method.Method == "POST" || method.Method == "DELETE")
+            {
+                requestUri = endpoint;
+                var content = new StringContent(queryParams, Encoding.UTF8, "application/json");
 
-            return Call(HttpMethod.Get, Endpoints.Spot.Buy, "", parameters);
+                return _httpClient.PostAsync(requestUri, content).Result.Content.ReadAsStringAsync().Result;
+            }
+
+            requestUri = $"{endpoint}?{queryParams}";
+
+            return _httpClient.SendAsync(new HttpRequestMessage(method, requestUri)).Result.Content.ReadAsStringAsync().Result;
         }
 
-        public string Sell(
-            string currencyPair, 
-            string limit = "", 
-            string lastId = "", 
-            string reverse = "",
-            string from = "",
-            string to = "",
-            string page = "")
+        // TODO
+        /// <summary>
+        /// Mixed query string and request body call
+        /// </summary>
+        /// <param name="method">Only Post or Delete method</param>
+        /// <param name="endpoint"></param>
+        /// <param name="queryStringParams">Query string parameters</param>
+        /// <param name="requestBodyParams">Request body parameters</param>
+        /// <returns></returns>
+        //private string Call(HttpMethod method, string endpoint, Dictionary<string, string> queryStringParams, Dictionary<string, string> requestBodyParams)
+        //{
+        //    return _httpClient.SendAsync(new HttpRequestMessage(method, "requestUri")).Result.Content.ReadAsStringAsync().Result;
+        //}
+
+        #region Queries
+
+        public string AccountInfo()
         {
-            if (string.IsNullOrWhiteSpace(currencyPair))
-                throw new ArgumentException("currencyPair cannot be empty. ", nameof(currencyPair));
+            return Call(HttpMethod.Get, Endpoints.Spot.AccountInfo);
+        }
 
-            string parameters = string.Format("currency_pair={0}", currencyPair) +
-                (!string.IsNullOrWhiteSpace(limit) ? string.Format("&limit={0}", limit) : "") +
-                (!string.IsNullOrWhiteSpace(lastId) ? string.Format("&last_id={0}", lastId) : "") +
-                (!string.IsNullOrWhiteSpace(reverse) ? string.Format("&reverse={0}", reverse) : "") +
-                (!string.IsNullOrWhiteSpace(from) ? string.Format("&from={0}", from) : "") +
-                (!string.IsNullOrWhiteSpace(to) ? string.Format("&to={0}", to) : "") +
-                (!string.IsNullOrWhiteSpace(page) ? string.Format("&page={0}", page) : "");
+        public string NewOrder(
+            string symbol, 
+            string side,
+            string type,
+            string quantity = "",
+            string quoteOrderQty = "",
+            string price = "",
+            string newClientOrderId = "")
+        {
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Empty parameter", nameof(symbol));
+            if (string.IsNullOrWhiteSpace(side))
+                throw new ArgumentException("Empty parameter", nameof(side));
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentException("Empty parameter", nameof(type));
 
-            return Call(HttpMethod.Get, Endpoints.Spot.Sell, "", parameters);
+            var parameters = new Dictionary<string, string>
+            {
+                { $"{nameof(symbol)}", symbol },
+                { $"{nameof(side)}", side },
+                { $"{nameof(type)}", type }
+            };
+
+            if (!string.IsNullOrEmpty(quantity))
+                parameters.Add(nameof(quantity), quantity);
+            if (!string.IsNullOrEmpty(quoteOrderQty))
+                parameters.Add(nameof(quoteOrderQty), quoteOrderQty);
+            if (!string.IsNullOrEmpty(price))
+                parameters.Add(nameof(price), price);
+            if (!string.IsNullOrEmpty(newClientOrderId))
+                parameters.Add(nameof(newClientOrderId), newClientOrderId);
+
+            return Call(HttpMethod.Post, Endpoints.Spot.NewOrder, parameters);
         }
 
         #endregion

@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="Binance\FuturesApi.cs" />
     <Compile Include="Binance\MarginTradeApi.cs" />
-    <Compile Include="Binance\P2P.cs" />
+    <Compile Include="Binance\P2pApi.cs" />
     <Compile Include="Binance\SpotTradeApi.cs" />
     <Compile Include="Binance\WalletApi.cs" />
     <Compile Include="Bitget\Endpoints.cs" />
@@ -115,7 +115,6 @@
     <Compile Include="Mexc\PublicApi.cs" />
     <Compile Include="Mexc\SpotApi.cs" />
     <Compile Include="Mexc\WalletApi.cs" />
-    <Compile Include="Mexc\WithdrawalApi.cs" />
     <Compile Include="Poloniex\AccountApi.cs" />
     <Compile Include="Poloniex\PoloniexApi.cs" />
     <Compile Include="Poloniex\Endpoints.cs" />

@@ -110,10 +110,11 @@ namespace Cryptomarkets.Apis.Poloniex
             if (string.IsNullOrWhiteSpace(side))
                 throw new ArgumentException("side cannot be empty. ", nameof(side));
 
-            var parameters = new Dictionary<string, string>();
-
-            parameters.Add("symbol", symbol);
-            parameters.Add("side", side);
+            var parameters = new Dictionary<string, string>
+            {
+                { "symbol", symbol },
+                { "side", side }
+            };
             if (!string.IsNullOrEmpty(timeInForce)) 
                 parameters.Add("timeInForce", timeInForce);
             if (!string.IsNullOrEmpty(type))

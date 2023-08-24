@@ -6,14 +6,14 @@ using System.Net.Http.Headers;
 
 namespace Cryptomarkets.Apis.Binance
 {
-    public class P2P
+    public class P2pApi
     {
         private readonly string _secret;
         //private const string ApiUrl = "https://p2p.binance.com";
         private const string ApiUrl = "https://c2c.binance.com";
         private readonly HttpClient _httpClient;
 
-        internal P2P(string apiKey, string apiSecret)
+        internal P2pApi(string apiKey, string apiSecret)
         {
             _secret = apiSecret;
             _httpClient = CreateAndConfigureHttpClient(apiKey);

@@ -4,11 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using Cryptomarkets.Apis.Binance;
-using Cryptomarkets.Apis.GateIO;
-using Cryptomarkets.Apis.Poloniex;
-using Cryptomarkets.Apis.Latoken;
-using Cryptomarkets.Apis.Lbank;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
@@ -23,8 +18,12 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
 using System.Security.Claims;
-using Org.BouncyCastle.Pkcs;
-using Org.BouncyCastle.Asn1.Ocsp;
+using Cryptomarkets.Apis.Binance;
+using Cryptomarkets.Apis.GateIO;
+using Cryptomarkets.Apis.Poloniex;
+using Cryptomarkets.Apis.Latoken;
+using Cryptomarkets.Apis.Lbank;
+using Cryptomarkets.Apis.Mexc;
 
 namespace Cryptomarkets
 {
@@ -285,13 +284,15 @@ namespace Cryptomarkets
             return DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         }
 
-        public static string GetBinanceServerTime() => Extensions.JsonParse(BinanceApi.Public.GetServerTime(), "serverTime");
+        public static string GetBinanceServerTime() => JsonParse(BinanceApi.Public.GetServerTime(), "serverTime");
 
-        public static string GetPoloniexServerTime() => Extensions.JsonParse(PoloniexApi.Public.GetServerTime(), "serverTime");
+        public static string GetPoloniexServerTime() => JsonParse(PoloniexApi.Public.GetServerTime(), "serverTime");
+
+        public static string GetMexcServerTime() => JsonParse(MexcApi.Public.GetServerTime(), "serverTime");
 
         public static string GetGateIOServerTime()
         {
-            string serverTime = Extensions.JsonParse(BitgetApi.Spot.GetServerTime(), "server_time");
+            string serverTime = Extensions.JsonParse(GateApi.Spot.GetServerTime(), "server_time");
 
             var timeInSeconds = serverTime.Remove(serverTime.Length-3);
 
@@ -337,8 +338,10 @@ namespace Cryptomarkets
 
         public static string GenerateOrderedPayloadPoloniex(string method, string path, string timestamp, Dictionary<string, string> parameters)
         {
-            var sortParams = new SortedDictionary<string, string>(parameters);
-            sortParams.Add("signTimestamp", timestamp);
+            var sortParams = new SortedDictionary<string, string>(parameters)
+            {
+                { "signTimestamp", timestamp }
+            };
 
             var payloadBuffer = new StringBuilder();
             payloadBuffer.Append(method).Append("\n").Append(path).Append("\n");
@@ -374,6 +377,32 @@ namespace Cryptomarkets
             string payload = method + "\n" + path + "\n" + $"signTimestamp={timestamp}";
 
             return payload;
+        }
+
+        public static string GenerateParamsString(Dictionary<string, string> parameters, bool isSorted = false)
+        {
+            IDictionary<string, string> paramList;
+
+            if (isSorted)
+            {
+                paramList = new SortedDictionary<string, string>(parameters);
+            }
+
+            else
+            {
+                paramList = new Dictionary<string, string>(parameters);
+            }
+
+            var stringBuffer = new StringBuilder();
+
+            foreach (var entry in paramList)
+            {
+                stringBuffer.Append(entry.Key).Append("=").Append(entry.Value).Append("&");
+            }
+
+            string paramsString = stringBuffer.ToString().Substring(0, stringBuffer.Length - 1);
+
+            return paramsString;
         }
 
         public static string GenerateParamsString(string path, Dictionary<string, string> parameters)
