@@ -163,5 +163,11 @@
             public const string CollateralRepayResult = "/sapi/v1/futures/loan/collateralRepayResult";
             public const string InterestHistory = "/sapi/v1/futures/loan/interestHistory";
         }
+
+        internal static class P2P
+        {
+            //public const string MakeOrder = "/bapi/c2c/v2/private/c2c/order-match/makeOrder";
+            public const string Aaa = "";
+        }
     }
 }

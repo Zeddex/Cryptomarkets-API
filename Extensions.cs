@@ -7,7 +7,6 @@ using System.Text;
 using Cryptomarkets.Apis.Binance;
 using Cryptomarkets.Apis.GateIO;
 using Cryptomarkets.Apis.Poloniex;
-using Cryptomarkets.Apis.Bitbns;
 using Cryptomarkets.Apis.Latoken;
 using Cryptomarkets.Apis.Lbank;
 using Newtonsoft.Json;
@@ -22,12 +21,33 @@ using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities.Encoders;
+using System.Security.Claims;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Cryptomarkets
 {
     public static class Extensions
     {
         #region Encoding
+
+        public static string GenerateSignatureHex(string secret, string message)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            byte[] sha256Bytes;
+
+            using (var hmacSHA256 = new HMACSHA256(Encoding.UTF8.GetBytes(secret)))
+                sha256Bytes = hmacSHA256.ComputeHash(Encoding.UTF8.GetBytes(message));
+
+            foreach (var b in sha256Bytes)
+            {
+                sb.Append(b.ToString("x2"));
+            }
+
+            return sb.ToString();
+        }
 
         public static string GenerateSignatureHMACSHA256(string apiSecret, string message)
         {
@@ -43,6 +63,42 @@ namespace Cryptomarkets
                 sha256Bytes = hmacSHA256.ComputeHash(Encoding.UTF8.GetBytes(message));
 
             return Convert.ToBase64String(sha256Bytes);
+        }
+
+        public static string RsaSignTest(string privateKey, string payload)
+        {
+            string privKey = "-----BEGIN PRIVATE KEY-----\n" + privateKey + "\n-----END PRIVATE KEY-----";
+            var bytesToEncrypt = Encoding.UTF8.GetBytes(payload);
+            byte[] encoded;
+
+            RSAParameters rsaParams;
+
+            using (var tr = new StringReader(privKey))
+            {
+                var pemReader = new PemReader(tr);
+                var privateRsaParams = pemReader.ReadObject() as RsaPrivateCrtKeyParameters;
+                rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
+            }
+
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.ImportParameters(rsaParams);
+                encoded = rsa.SignData(bytesToEncrypt, SHA256.Create());
+            }
+
+            return Convert.ToBase64String(encoded);
+        }
+
+        public static string RsaSignTest2(string privateKey, string payload)
+        {
+            string privKey = "-----BEGIN PRIVATE KEY-----\n" + privateKey + "\n-----END PRIVATE KEY-----";
+            var privateByte = Encoding.UTF8.GetBytes(privateKey);
+            var bytesToEncrypt = Encoding.UTF8.GetBytes(payload);
+            byte[] encoded;
+
+            
+
+            return "";
         }
 
         public static string RsaEncryptWithPrivate(string privateKey, string clearText) // TODO
@@ -94,7 +150,7 @@ namespace Cryptomarkets
 
             RSAParameters RSAKeyInfo = RSA.ExportParameters(false);
             RSAKeyInfo.Modulus = Encoding.UTF8.GetBytes(apiSecret);
-            RSA.ImportParameters(RSAKeyInfo);
+            //RSA.ImportParameters(RSAKeyInfo);
 
             using (var rsa = new RSACryptoServiceProvider())
             {
@@ -235,7 +291,7 @@ namespace Cryptomarkets
 
         public static string GetGateIOServerTime()
         {
-            string serverTime = Extensions.JsonParse(GateIOApi.Spot.GetServerTime(), "server_time");
+            string serverTime = Extensions.JsonParse(BitgetApi.Spot.GetServerTime(), "server_time");
 
             var timeInSeconds = serverTime.Remove(serverTime.Length-3);
 

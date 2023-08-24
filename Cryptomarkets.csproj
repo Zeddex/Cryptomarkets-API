@@ -35,6 +35,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="jose-jwt, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\jose-jwt.4.0.1\lib\net472\jose-jwt.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\cryptomarkets api\gate.io\VS\gate.io-dll\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -42,36 +45,60 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binance\BinanceFuturesApi.cs" />
-    <Compile Include="Binance\BinanceMarginTradeApi.cs" />
-    <Compile Include="Binance\BinanceSpotTradeApi.cs" />
-    <Compile Include="Binance\BinanceWalletApi.cs" />
-    <Compile Include="Bitbns\BitbnsApi.cs" />
-    <Compile Include="Bitbns\Endpoints.cs" />
-    <Compile Include="Bitbns\MarginApi.cs" />
-    <Compile Include="Bitbns\PublicApi.cs" />
-    <Compile Include="Bitbns\SpotApi.cs" />
-    <Compile Include="Bitbns\WalletApi.cs" />
-    <Compile Include="Bitbns\WithdrawalApi.cs" />
+    <Compile Include="Binance\FuturesApi.cs" />
+    <Compile Include="Binance\MarginTradeApi.cs" />
+    <Compile Include="Binance\P2P.cs" />
+    <Compile Include="Binance\SpotTradeApi.cs" />
+    <Compile Include="Binance\WalletApi.cs" />
+    <Compile Include="Bitget\Endpoints.cs" />
+    <Compile Include="Bitget\BitgetApi.cs" />
+    <Compile Include="Bitget\PublicApi.cs" />
+    <Compile Include="Bitget\SpotApi.cs" />
+    <Compile Include="Bitget\WalletApi.cs" />
+    <Compile Include="Bitget\WithdrawalApi.cs" />
+    <Compile Include="Bybit\BybitApi.cs" />
+    <Compile Include="Bybit\Endpoints.cs" />
+    <Compile Include="Bybit\PublicApi.cs" />
+    <Compile Include="Bybit\SpotApi.cs" />
+    <Compile Include="Bybit\WalletApi.cs" />
+    <Compile Include="Bybit\WithdrawalApi.cs" />
     <Compile Include="CryptoUtility.cs" />
     <Compile Include="DebugMode.cs" />
     <Compile Include="Binance\BinanceApi.cs" />
-    <Compile Include="Binance\BinancePrivateApi.cs" />
-    <Compile Include="Binance\BinancePublicApi.cs" />
-    <Compile Include="Binance\BinanceWithdrawalApi.cs" />
+    <Compile Include="Binance\PrivateApi.cs" />
+    <Compile Include="Binance\PublicApi.cs" />
+    <Compile Include="Binance\WithdrawalApi.cs" />
     <Compile Include="Binance\Endpoints.cs" />
     <Compile Include="Binance\EndpointSecurityType.cs" />
-    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Exmo\ExmoApi.cs" />
+    <Compile Include="Exmo\Endpoints.cs" />
+    <Compile Include="Exmo\PublicApi.cs" />
+    <Compile Include="Exmo\SpotApi.cs" />
+    <Compile Include="Exmo\WalletApi.cs" />
+    <Compile Include="Exmo\WithdrawalApi.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="GateIO\Endpoints.cs" />
-    <Compile Include="GateIO\GateIOApi.cs" />
-    <Compile Include="GateIO\GateIOMarginApi.cs" />
-    <Compile Include="GateIO\GateIOPublicApi.cs" />
-    <Compile Include="GateIO\GateIOSpotApi.cs" />
-    <Compile Include="GateIO\GateIOWalletApi.cs" />
-    <Compile Include="GateIO\GateIOWithdrawalApi.cs" />
+    <Compile Include="Gate\Endpoints.cs" />
+    <Compile Include="Gate\GateApi.cs" />
+    <Compile Include="Gate\MarginApi.cs" />
+    <Compile Include="Gate\PublicApi.cs" />
+    <Compile Include="Gate\SpotApi.cs" />
+    <Compile Include="Gate\WalletApi.cs" />
+    <Compile Include="Gate\WithdrawalApi.cs" />
+    <Compile Include="Huobi\HuobiApi.cs" />
+    <Compile Include="Huobi\Endpoints.cs" />
+    <Compile Include="Huobi\PublicApi.cs" />
+    <Compile Include="Huobi\SpotApi.cs" />
+    <Compile Include="Huobi\WalletApi.cs" />
+    <Compile Include="Huobi\WithdrawalApi.cs" />
+    <Compile Include="Kucoin\KucoinApi.cs" />
+    <Compile Include="Kucoin\Endpoints.cs" />
+    <Compile Include="Kucoin\PublicApi.cs" />
+    <Compile Include="Kucoin\SpotApi.cs" />
+    <Compile Include="Kucoin\WalletApi.cs" />
+    <Compile Include="Kucoin\WithdrawalApi.cs" />
     <Compile Include="Latoken\LatokenApi.cs" />
     <Compile Include="Latoken\Endpoints.cs" />
     <Compile Include="Latoken\PublicApi.cs" />
@@ -83,6 +110,12 @@
     <Compile Include="Lbank\Endpoints.cs" />
     <Compile Include="Lbank\PrivateApi.cs" />
     <Compile Include="Lbank\PublicApi.cs" />
+    <Compile Include="Mexc\MexcApi.cs" />
+    <Compile Include="Mexc\Endpoints.cs" />
+    <Compile Include="Mexc\PublicApi.cs" />
+    <Compile Include="Mexc\SpotApi.cs" />
+    <Compile Include="Mexc\WalletApi.cs" />
+    <Compile Include="Mexc\WithdrawalApi.cs" />
     <Compile Include="Poloniex\AccountApi.cs" />
     <Compile Include="Poloniex\PoloniexApi.cs" />
     <Compile Include="Poloniex\Endpoints.cs" />
@@ -90,6 +123,12 @@
     <Compile Include="Poloniex\PublicApi.cs" />
     <Compile Include="Poloniex\OrderApi.cs" />
     <Compile Include="Poloniex\WalletApi.cs" />
+    <Compile Include="Yobit\YobitApi.cs" />
+    <Compile Include="Yobit\Endpoints.cs" />
+    <Compile Include="Yobit\PublicApi.cs" />
+    <Compile Include="Yobit\SpotApi.cs" />
+    <Compile Include="Yobit\WalletApi.cs" />
+    <Compile Include="Yobit\WithdrawalApi.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

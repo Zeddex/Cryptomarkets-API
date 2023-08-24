@@ -11,6 +11,7 @@ namespace Cryptomarkets.Apis.Binance
         private static BinanceFuturesApi _futures;
         private static BinancePrivateApi _private;
         private static BinanceWithdrawalApi _withdrawal;
+        private static BinanceP2P _p2p;
         private static bool _isInit;
 
         /// <summary>
@@ -97,6 +98,18 @@ namespace Cryptomarkets.Apis.Binance
             }
         }
 
+        /// <summary>
+        /// P2P
+        /// </summary>
+        public static BinanceP2P P2P
+        {
+            get
+            {
+                CheckIsInit();
+                return _p2p;
+            }
+        }
+
         public static void Init(string apiKey, string apiSecret)
         {
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -112,6 +125,7 @@ namespace Cryptomarkets.Apis.Binance
             _futures = new BinanceFuturesApi(apiKey, apiSecret);
             _private = new BinancePrivateApi(apiKey, apiSecret);
             _withdrawal = new BinanceWithdrawalApi(apiKey, apiSecret);
+            _p2p = new BinanceP2P(apiKey, apiSecret);
             _isInit = true;
         }
 

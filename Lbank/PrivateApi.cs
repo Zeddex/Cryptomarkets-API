@@ -49,7 +49,8 @@ namespace Cryptomarkets.Apis.Lbank
             string md5Hash = Extensions.MD5Sign(queryString);
             //string signature = Extensions.GenerateSignatureLbank(_secret, md5Hash);
             //string signature = Extensions.RsaEncryptWithPrivate(_secret, md5Hash);
-            string signature = "";
+            string signature = Extensions.RsaSignTest(_secret, md5Hash);
+            //string signature = "";
 
             string requestUri = Extensions.GenerateParamsString(endpoint, parameters) + $"&sign={signature}";
 
