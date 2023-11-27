@@ -33,9 +33,9 @@ namespace Cryptomarkets.Apis.Mexc
             };
         }
 
-        private string Call(HttpMethod method, string endpoint, string queryStringParam = "")
+        private string Call(HttpMethod method, string endpoint)
         {
-            string requestUri = endpoint + queryStringParam;
+            string requestUri = endpoint;
 
             return _httpClient.SendAsync(new HttpRequestMessage(method, requestUri)).Result.Content.ReadAsStringAsync().Result;
         }

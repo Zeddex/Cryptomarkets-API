@@ -22,9 +22,6 @@ namespace Cryptomarkets.Apis.GateIO
         {
             HttpClientHandler handler = new HttpClientHandler();
 
-            if (DebugMode.On)
-                handler.Proxy = new WebProxy(new Uri(DebugMode.Proxy));
-
             handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             HttpClient configureHttpClient = new HttpClient(handler);
@@ -84,9 +81,10 @@ namespace Cryptomarkets.Apis.GateIO
         public string Withdraw(
             string amount,
             string currency,
+            string chain,
             string address = "",
             string memo = "",
-            string chain = "")
+            string orderId = "")
         {
             if (string.IsNullOrWhiteSpace(amount))
                 throw new ArgumentException("amount cannot be empty. ", nameof(amount));
@@ -94,10 +92,10 @@ namespace Cryptomarkets.Apis.GateIO
             if (string.IsNullOrWhiteSpace(currency))
                 throw new ArgumentException("currency cannot be empty. ", nameof(currency));
 
-            string parameters = string.Format("amount={0}&currency={1}", amount, currency) +
-                                (!string.IsNullOrWhiteSpace(address) ? string.Format("&address={0}", address) : "") +
-                                (!string.IsNullOrWhiteSpace(memo) ? string.Format("&memo={0}", memo) : "") +
-                                (!string.IsNullOrWhiteSpace(chain) ? string.Format("&chain={0}", chain) : "");
+            string parameters = string.Format($"amount={amount}&currency={currency}&chain={chain}") +
+                                (!string.IsNullOrWhiteSpace(address) ? string.Format($"&address={address}") : "") +
+                                (!string.IsNullOrWhiteSpace(memo) ? string.Format($"&memo={memo}") : "") +
+                                (!string.IsNullOrWhiteSpace(chain) ? string.Format($"&orderId={orderId}") : "");
 
             return Call(HttpMethod.Post, Endpoints.Withdrawal.Withdraw, "", parameters, true);
         }

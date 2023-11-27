@@ -4,13 +4,14 @@ namespace Cryptomarkets.Apis.Bybit
 {
     public class BybitApi
     {
-        private static PublicApi _public;
+        private static MarketApi _market;
         private static WalletApi _wallet;
-        private static WithdrawalApi _withdrawal;
         private static SpotApi _spot;
+        private static AccountApi _account;
+        private static TradeApi _trade;
         private static bool _isInit;
 
-        public static PublicApi Public => _public;
+        public static MarketApi Public => _market;
 
         public static WalletApi Wallet
         {
@@ -18,15 +19,6 @@ namespace Cryptomarkets.Apis.Bybit
             {
                 CheckIsInit();
                 return _wallet;
-            }
-        }
-
-        public static WithdrawalApi Withdrawal
-        {
-            get
-            {
-                CheckIsInit();
-                return _withdrawal;
             }
         }
 
@@ -39,6 +31,24 @@ namespace Cryptomarkets.Apis.Bybit
             }
         }
 
+        public static AccountApi Account
+        {
+            get
+            {
+                CheckIsInit();
+                return _account;
+            }
+        }
+
+        public static TradeApi Trade
+        {
+            get
+            {
+                CheckIsInit();
+                return _trade;
+            }
+        }
+
         public static void Init(string apiKey, string apiSecret)
         {
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -47,10 +57,11 @@ namespace Cryptomarkets.Apis.Bybit
             if (string.IsNullOrWhiteSpace(apiSecret))
                 throw new ArgumentNullException("Api secret is empty");
 
-            _public = new PublicApi();
+            _market = new MarketApi();
             _wallet = new WalletApi(apiKey, apiSecret);
-            _withdrawal = new WithdrawalApi(apiKey, apiSecret);
             _spot = new SpotApi(apiKey, apiSecret);
+            _account = new AccountApi(apiKey, apiSecret);
+            _trade = new TradeApi(apiKey, apiSecret);
             _isInit = true;
         }
 

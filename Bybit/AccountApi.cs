@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Cryptomarkets.Apis.Bybit
 {
-    public class SpotApi
+    public class AccountApi
     {
         private readonly HttpClient _httpClient;
         private const string ApiUrl = "https://api.bybit.com";
@@ -18,7 +18,7 @@ namespace Cryptomarkets.Apis.Bybit
         public static string ApiSecret { get; private set; }
         public static string RecvWindow { get; set; } = "5000";
 
-        public SpotApi(string apiKey, string apiSecret)
+        public AccountApi(string apiKey, string apiSecret)
         {
             ApiKey = apiKey;
             ApiSecret = apiSecret;
@@ -27,13 +27,15 @@ namespace Cryptomarkets.Apis.Bybit
 
         private static HttpClient CreateAndConfigureHttpClient()
         {
-            var handler = new HttpClientHandler();
+            var handler = new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
 
-            handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            var configureHttpClient = new HttpClient(handler);
-
-            configureHttpClient.BaseAddress = new Uri(ApiUrl);
+            var configureHttpClient = new HttpClient(handler)
+            {
+                BaseAddress = new Uri(ApiUrl)
+            };
             configureHttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             configureHttpClient.DefaultRequestHeaders.Add("X-BAPI-API-KEY", ApiKey);
             configureHttpClient.DefaultRequestHeaders.Add("X-BAPI-RECV-WINDOW", RecvWindow);
@@ -109,20 +111,25 @@ namespace Cryptomarkets.Apis.Bybit
 
         #region Queries
 
-        public async Task<string> Borrow(string coin, string qty)
+        public async Task<string> Balance(string accountType, string coin = null)
         {
-            if (string.IsNullOrWhiteSpace(coin))
-                throw new ArgumentException("Empty parameter", nameof(coin));
-            if (string.IsNullOrWhiteSpace(qty))
-                throw new ArgumentException("Empty parameter", nameof(qty));
+            if (string.IsNullOrWhiteSpace(accountType))
+                throw new ArgumentException("Empty parameter", nameof(accountType));
 
             var parameters = new Dictionary<string, object>
             {
-                { nameof(coin), coin },
-                { nameof(qty), qty }
+                { nameof(accountType), accountType }
             };
 
-            return await Call(HttpMethod.Post, Endpoints.Spot.Borrow, parameters);
+            if (!string.IsNullOrEmpty(coin))
+                parameters.Add(nameof(coin), coin);
+
+            return await Call(HttpMethod.Get, Endpoints.Account.Balance, parameters);
+        }
+
+        public async Task<string> Info()
+        {
+            return await Call(HttpMethod.Get, Endpoints.Account.Info);
         }
 
         #endregion

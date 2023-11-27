@@ -10,6 +10,7 @@ using System.IO;
 using System.Security.Policy;
 using System.Security;
 using System.Collections;
+using System.Threading.Tasks;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
@@ -17,13 +18,13 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
-using System.Security.Claims;
 using Cryptomarkets.Apis.Binance;
 using Cryptomarkets.Apis.GateIO;
 using Cryptomarkets.Apis.Poloniex;
 using Cryptomarkets.Apis.Latoken;
 using Cryptomarkets.Apis.Lbank;
 using Cryptomarkets.Apis.Mexc;
+using Cryptomarkets.Apis.Bybit;
 
 namespace Cryptomarkets
 {
@@ -290,13 +291,15 @@ namespace Cryptomarkets
 
         public static string GetMexcServerTime() => JsonParse(MexcApi.Public.GetServerTime(), "serverTime");
 
+        public static async Task<string> GetBybitServerTime() => JsonParse(await BybitApi.Public.GetServerTime(), "time", "");
+
         public static string GetGateIOServerTime()
         {
-            string serverTime = Extensions.JsonParse(GateApi.Spot.GetServerTime(), "server_time");
+            string serverTime = JsonParse(GateApi.Spot.GetServerTime(), "server_time");
 
-            var timeInSeconds = serverTime.Remove(serverTime.Length-3);
-
-            return timeInSeconds;
+            //var timeInSeconds = serverTime.Remove(serverTime.Length-3);
+            //return timeInSeconds;
+            return serverTime;
         }
 
         #endregion
@@ -324,10 +327,20 @@ namespace Cryptomarkets
             return json;
         }
 
-        public static string JsonParse(string data, string property)
+        public static string JsonParse(string data, string property, string highLevelProp = "")
         {
             dynamic json = JObject.Parse(data);
-            string value = json[property];
+            string value = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(highLevelProp))
+            {
+                value = json[property];
+            }
+
+            else
+            {
+                value = json[highLevelProp][property];
+            }
 
             return value;
         }
@@ -379,18 +392,18 @@ namespace Cryptomarkets
             return payload;
         }
 
-        public static string GenerateParamsString(Dictionary<string, string> parameters, bool isSorted = false)
+        public static string GenerateParamsString(Dictionary<string, object> parameters, bool isSorted = false)
         {
-            IDictionary<string, string> paramList;
+            IDictionary<string, object> paramList;
 
             if (isSorted)
             {
-                paramList = new SortedDictionary<string, string>(parameters);
+                paramList = new SortedDictionary<string, object>(parameters);
             }
 
             else
             {
-                paramList = new Dictionary<string, string>(parameters);
+                paramList = new Dictionary<string, object>(parameters);
             }
 
             var stringBuffer = new StringBuilder();

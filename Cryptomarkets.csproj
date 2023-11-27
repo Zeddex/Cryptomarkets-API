@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'bybit|AnyCPU'">
+    <OutputPath>bin\bybit\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -38,13 +41,44 @@
     <Reference Include="jose-jwt, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\jose-jwt.4.0.1\lib\net472\jose-jwt.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\Share\zenno\templates\_crypto\cryptomarkets api\gate.io\VS\gate.io-dll\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Net.Http.Json.8.0.0\lib\net462\System.Net.Http.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Text.Json.8.0.0\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Zenno\templates\_crypto\_cryptomarkets\cryptomarkets api\_all in 1\VS\cryptomarkets-dll - test\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
@@ -59,12 +93,13 @@
     <Compile Include="Bitget\SpotApi.cs" />
     <Compile Include="Bitget\WalletApi.cs" />
     <Compile Include="Bitget\WithdrawalApi.cs" />
+    <Compile Include="Bybit\AccountApi.cs" />
     <Compile Include="Bybit\BybitApi.cs" />
     <Compile Include="Bybit\Endpoints.cs" />
-    <Compile Include="Bybit\PublicApi.cs" />
+    <Compile Include="Bybit\MarketApi.cs" />
     <Compile Include="Bybit\SpotApi.cs" />
+    <Compile Include="Bybit\TradeApi.cs" />
     <Compile Include="Bybit\WalletApi.cs" />
-    <Compile Include="Bybit\WithdrawalApi.cs" />
     <Compile Include="CryptoUtility.cs" />
     <Compile Include="DebugMode.cs" />
     <Compile Include="Binance\BinanceApi.cs" />
@@ -130,6 +165,7 @@
     <Compile Include="Yobit\WithdrawalApi.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

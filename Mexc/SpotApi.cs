@@ -35,16 +35,15 @@ namespace Cryptomarkets.Apis.Mexc
         }
 
         /// <summary>
-        /// Empty or 1 query string parameter call
+        /// Request without parameters
         /// </summary>
         /// <param name="method"></param>
         /// <param name="endpoint"></param>
-        /// <param name="queryStringParam"></param>
         /// <returns></returns>
-        private string Call(HttpMethod method, string endpoint, string queryStringParam = "")
+        private string Call(HttpMethod method, string endpoint)
         {
             string timestamp = Extensions.GetMexcServerTime();
-            queryStringParam = queryStringParam + (!string.IsNullOrWhiteSpace(queryStringParam) ? "&timestamp=" : "timestamp=") + timestamp;
+            string queryStringParam = $"timestamp={timestamp}";
             string signature = Extensions.GenerateSignatureHMACSHA256(_secret, queryStringParam);
             string requestUri = $"{endpoint}?{queryStringParam}&signature={signature}";
 
@@ -59,7 +58,7 @@ namespace Cryptomarkets.Apis.Mexc
         /// <param name="requestParams"></param>
         /// <param name="isBodyParams">as request body</param>
         /// <returns></returns>
-        private string Call(HttpMethod method, string endpoint, Dictionary<string, string> requestParams)
+        private string Call(HttpMethod method, string endpoint, Dictionary<string, object> requestParams)
         {
             string requestUri;
             string timestamp = Extensions.GetMexcServerTime();
@@ -119,7 +118,7 @@ namespace Cryptomarkets.Apis.Mexc
             if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentException("Empty parameter", nameof(type));
 
-            var parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string, object>
             {
                 { $"{nameof(symbol)}", symbol },
                 { $"{nameof(side)}", side },
