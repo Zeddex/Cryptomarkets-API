@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +42,22 @@ namespace Cryptomarkets.Apis.Bybit
             return configureHttpClient;
         }
 
+        private void RewriteHeaders(string timestamp, string signature)
+        {
+            if (_httpClient.DefaultRequestHeaders.Contains("X-BAPI-TIMESTAMP"))
+            {
+                _httpClient.DefaultRequestHeaders.Remove("X-BAPI-TIMESTAMP");
+            }
+
+            if (_httpClient.DefaultRequestHeaders.Contains("X-BAPI-SIGN"))
+            {
+                _httpClient.DefaultRequestHeaders.Remove("X-BAPI-SIGN");
+            }
+
+            _httpClient.DefaultRequestHeaders.Add("X-BAPI-TIMESTAMP", timestamp);
+            _httpClient.DefaultRequestHeaders.Add("X-BAPI-SIGN", signature);
+        }
+
         /// <summary>
         /// Request without parameters
         /// </summary>
@@ -56,8 +71,7 @@ namespace Cryptomarkets.Apis.Bybit
             string signature = Extensions.GenerateSignatureHMACSHA256(ApiSecret, paramStr);
             string requestUri = endpoint;
 
-            _httpClient.DefaultRequestHeaders.Add("X-BAPI-TIMESTAMP", timestamp);
-            _httpClient.DefaultRequestHeaders.Add("X-BAPI-SIGN", signature);
+            RewriteHeaders(timestamp, signature);
 
             var response = await _httpClient.SendAsync(new HttpRequestMessage(method, requestUri));
             return await response.Content.ReadAsStringAsync();
@@ -102,8 +116,7 @@ namespace Cryptomarkets.Apis.Bybit
 
             string signature = Extensions.GenerateSignatureHMACSHA256(ApiSecret, toSign);
 
-            _httpClient.DefaultRequestHeaders.Add("X-BAPI-TIMESTAMP", timestamp);
-            _httpClient.DefaultRequestHeaders.Add("X-BAPI-SIGN", signature);
+            RewriteHeaders(timestamp, signature);
 
             var response = await _httpClient.SendAsync(request);
 

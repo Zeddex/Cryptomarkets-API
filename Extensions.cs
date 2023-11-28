@@ -18,12 +18,12 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.Encoders;
-using Cryptomarkets.Apis.Binance;
-using Cryptomarkets.Apis.GateIO;
-using Cryptomarkets.Apis.Poloniex;
-using Cryptomarkets.Apis.Latoken;
-using Cryptomarkets.Apis.Lbank;
-using Cryptomarkets.Apis.Mexc;
+//using Cryptomarkets.Apis.Binance;
+//using Cryptomarkets.Apis.GateIO;
+//using Cryptomarkets.Apis.Poloniex;
+//using Cryptomarkets.Apis.Latoken;
+//using Cryptomarkets.Apis.Lbank;
+//using Cryptomarkets.Apis.Mexc;
 using Cryptomarkets.Apis.Bybit;
 
 namespace Cryptomarkets
@@ -202,9 +202,6 @@ namespace Cryptomarkets
             //rsa.ImportParameters(rsap);
             //byte[] encryptedData = rsa.Encrypt(Encoding.UTF8.GetBytes(message), RSAEncryptionPadding.OaepSHA256);
             //string base64Encrypted = Convert.ToBase64String(encryptedData);
-
-
-            return "";
         }
 
         public static string GenerateSignatureHMACSHA512(string apiSecret, string message)
@@ -284,23 +281,22 @@ namespace Cryptomarkets
         {
             return DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         }
+        public static async Task<string> GetBybitServerTime() => JsonParse(await BybitApi.Market.GetServerTime(), "time", "");
 
-        public static string GetBinanceServerTime() => JsonParse(BinanceApi.Public.GetServerTime(), "serverTime");
+        //public static string GetBinanceServerTime() => JsonParse(BinanceApi.Public.GetServerTime(), "serverTime");
 
-        public static string GetPoloniexServerTime() => JsonParse(PoloniexApi.Public.GetServerTime(), "serverTime");
+        //public static string GetPoloniexServerTime() => JsonParse(PoloniexApi.Public.GetServerTime(), "serverTime");
 
-        public static string GetMexcServerTime() => JsonParse(MexcApi.Public.GetServerTime(), "serverTime");
+        //public static string GetMexcServerTime() => JsonParse(MexcApi.Public.GetServerTime(), "serverTime");
 
-        public static async Task<string> GetBybitServerTime() => JsonParse(await BybitApi.Public.GetServerTime(), "time", "");
+        //public static string GetGateIOServerTime()
+        //{
+        //    string serverTime = JsonParse(GateApi.Spot.GetServerTime(), "server_time");
 
-        public static string GetGateIOServerTime()
-        {
-            string serverTime = JsonParse(GateApi.Spot.GetServerTime(), "server_time");
-
-            //var timeInSeconds = serverTime.Remove(serverTime.Length-3);
-            //return timeInSeconds;
-            return serverTime;
-        }
+        //    //var timeInSeconds = serverTime.Remove(serverTime.Length-3);
+        //    //return timeInSeconds;
+        //    return serverTime;
+        //}
 
         #endregion
 

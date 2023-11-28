@@ -4,7 +4,7 @@ namespace Cryptomarkets.Apis.Binance
 {
     public class BinanceApi
     {
-        private static PublicApi _public;
+        private static PublicApi _public = new PublicApi();
         private static SpotTradeApi _spotTrade;
         private static MarginTradeApi _marginTrade;
         private static WalletApi _wallet;
@@ -118,7 +118,7 @@ namespace Cryptomarkets.Apis.Binance
             if (string.IsNullOrWhiteSpace(apiSecret))
                 throw new ArgumentNullException("ApiSecret не может быть пустым");
 
-            _public = new PublicApi();
+            //_public = new PublicApi();
             _spotTrade = new SpotTradeApi(apiKey, apiSecret);
             _marginTrade = new MarginTradeApi(apiKey, apiSecret);
             _wallet = new WalletApi(apiKey, apiSecret);

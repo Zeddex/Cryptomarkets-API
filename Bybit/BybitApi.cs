@@ -4,14 +4,15 @@ namespace Cryptomarkets.Apis.Bybit
 {
     public class BybitApi
     {
-        private static MarketApi _market;
+        private static MarketApi _market = new MarketApi();
         private static WalletApi _wallet;
         private static SpotApi _spot;
         private static AccountApi _account;
         private static TradeApi _trade;
         private static bool _isInit;
 
-        public static MarketApi Public => _market;
+        public static MarketApi Market => _market;
+
 
         public static WalletApi Wallet
         {
@@ -57,7 +58,7 @@ namespace Cryptomarkets.Apis.Bybit
             if (string.IsNullOrWhiteSpace(apiSecret))
                 throw new ArgumentNullException("Api secret is empty");
 
-            _market = new MarketApi();
+            //_market = new MarketApi();
             _wallet = new WalletApi(apiKey, apiSecret);
             _spot = new SpotApi(apiKey, apiSecret);
             _account = new AccountApi(apiKey, apiSecret);
