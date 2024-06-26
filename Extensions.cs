@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Net;
 using System.Security.Policy;
 using System.Security;
 using System.Collections;
@@ -302,15 +303,20 @@ namespace Cryptomarkets
 
         #region Converters
 
+        public static DateTime TimeStampToDateTime(double timeStamp)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return epoch.AddMilliseconds(timeStamp);
+        }
+
         public static string ConvertDictionaryToQueryString(Dictionary<string, string> dictionary)
         {
             return string.Join("&", dictionary.Select(p => p.Key + "=" + WebUtility.UrlEncode(p.Value)));
         }
 
-        public static DateTime TimeStampToDateTime(double timeStamp)
+        public static string ConvertDictionaryToQueryString(Dictionary<string, object> dictionary)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            return epoch.AddMilliseconds(timeStamp);
+            return string.Join("&", dictionary.Select(p => p.Key + "=" + p.Value));
         }
 
         public static string QueryStringToJson(string query)
@@ -339,6 +345,53 @@ namespace Cryptomarkets
             }
 
             return value;
+        }
+
+        public static string JsonToQueryString(string jsonString)
+        {
+            var jsonObject = JObject.Parse(jsonString);
+
+            var queryStringParameters = new Dictionary<string, string>();
+
+            FlattenJson(jsonObject, queryStringParameters, null);
+
+            var queryString = string.Join("&", queryStringParameters.Select(kvp =>
+                $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
+
+            return queryString;
+        }
+
+        private static void FlattenJson(JObject jsonObject, Dictionary<string, string> queryStringParameters, string parentKey)
+        {
+            foreach (var property in jsonObject.Properties())
+            {
+                var key = string.IsNullOrEmpty(parentKey) ? property.Name : $"{parentKey}.{property.Name}";
+                var value = property.Value;
+
+                if (value is JObject nestedObject)
+                {
+                    FlattenJson(nestedObject, queryStringParameters, key);
+                }
+                else if (value is JArray array)
+                {
+                    for (int i = 0; i < array.Count; i++)
+                    {
+                        var arrayItem = array[i];
+                        if (arrayItem is JObject)
+                        {
+                            FlattenJson((JObject)arrayItem, queryStringParameters, $"{key}[{i}]");
+                        }
+                        else
+                        {
+                            queryStringParameters[$"{key}[{i}]"] = arrayItem.ToString();
+                        }
+                    }
+                }
+                else
+                {
+                    queryStringParameters[key] = value.ToString();
+                }
+            }
         }
 
         #endregion
@@ -375,6 +428,22 @@ namespace Cryptomarkets
                 jsonStr = QueryStringToJson(queryStr);
             }
             
+            var payloadBuffer = new StringBuilder();
+            payloadBuffer.Append(method).Append("\n").Append(path).Append("\n").Append("requestBody=").Append(jsonStr).Append($"&signTimestamp={timestamp}");
+
+            return payloadBuffer.ToString();
+        }
+
+        public static string GeneratePostPayloadPoloniex(string method, string path, string timestamp, Dictionary<string, object> parameters)
+        {
+            string jsonStr = string.Empty;
+
+            if (parameters.Count > 0)
+            {
+                string queryStr = ConvertDictionaryToQueryString(parameters);
+                jsonStr = QueryStringToJson(queryStr);
+            }
+
             var payloadBuffer = new StringBuilder();
             payloadBuffer.Append(method).Append("\n").Append(path).Append("\n").Append("requestBody=").Append(jsonStr).Append($"&signTimestamp={timestamp}");
 

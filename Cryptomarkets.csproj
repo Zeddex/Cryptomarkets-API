@@ -111,6 +111,7 @@
     <None Include="Exmo\SpotApi.cs" />
     <None Include="Exmo\WalletApi.cs" />
     <None Include="Exmo\WithdrawalApi.cs" />
+    <Compile Include="Ed25519Authentication.cs" />
     <Compile Include="Extensions.cs" />
     <None Include="Gate\Endpoints.cs" />
     <None Include="Gate\GateApi.cs" />
